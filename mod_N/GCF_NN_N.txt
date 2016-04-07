@@ -44,7 +44,6 @@ struct NATURAL GCF_NN_N(struct NATURAL x, struct NATURAL y)
 			mod = MOD_NN_N(a, b); 
 			a = b;
 			b = mod;
-			delete[] mod.number;
 		}
 	} while (h == true);
 	return nod;
