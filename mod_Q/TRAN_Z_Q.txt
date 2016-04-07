@@ -1,1 +1,20 @@
 ﻿//Преобразование целого в дробное
+
+//Икренникова Диана 5307
+
+struct RATIONAL TRANS_Z_Q(struct INTEGER x)
+{
+ struct RATIONAL y;
+ y.numerator.number = (int*)malloc((x.index)*sizeof(int));
+ y.numerator.index = x.index;
+	for (int i = 0; i < y.numerator.index; i++) //скорее всего это и не нужно, но пусть пока будет
+		y.numerator.number[i] = 0;
+        for (int i = 0; i < y.numerator.index; i++)
+		y.numerator.number[i] = x.number[i];
+ y.denominator.index = 1;
+ y.denominator.number = (int*)malloc((y.denominator.index)*sizeof(int));
+ y.denominator.number [0] = 1;
+ y.sign = x.sing;
+ 
+ return y;
+}
