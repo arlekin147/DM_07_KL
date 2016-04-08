@@ -43,7 +43,7 @@ struct NATURAL MOD_NN_N(struct NATURAL a, struct NATURAL b)
 	{
 		if (i>0)
 		{
-			factor.index = factor.index + i;         //Умножение делителя на 10^i
+			factor.index = factor.index + i;   //Умножение делителя на 10^i
 			for (int j=0; j<factor.index; j++)
 				resize[j] = factor.number[j];
 			delete [] factor.number;
