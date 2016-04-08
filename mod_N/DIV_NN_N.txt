@@ -3,6 +3,7 @@
 
 ---
 Правиленко Михаил гр. 5307
+Pre-Alpha
 ---
 
 Используемые модули:
@@ -36,8 +37,8 @@ struct NATURAL DIV_NN_N(struct NATURAL a, struct NATURAL b)
 
 	do
 	{
-		c = DIV_NN_Dk(&temp, b, &k); //temp и k изменяются в ходе работы модуля
-		minus = SUB_NDN_N(temp, b, c.number[k]);
+		c = DIV_NN_Dk(&temp, b, &k); //temp - делимое, b - делитель, k - номер позиции (temp и k изменяются в ходе выполнения модуля
+		minus = SUB_NDN_N(temp, b, c.number[k]); // temp - уменьшаемое, b - вычитаемое, c.number[k] - множитель
 
 		delete [] temp.number;
 		temp.number = nullptr;
