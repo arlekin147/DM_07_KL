@@ -16,11 +16,15 @@ NATURAL MUL_NN_N(NATURAL num1, NATURAL num2)
 		for (j = 0; j < num2.index; j++)
 		{
 			buffer = NewNum.number[j + i];
-			//Возможность подключения модуля MUL_ND_N
 			NewNum.number[j + i] = (NewNum.number[j + i] + (num2.number[j] * num1.number[i] % 10) + add) % 10;
 			add = (buffer + (num2.number[j] * num1.number[i]) + add) /10;
 		}
 		NewNum.number[j + i] = add;
+	}
+	if (NewNum.number[NewNum.index - 1] == 0)//Если первый(наибольший)разряд равен 0, то удаляем его
+	{
+		NewNum.index--;
+		NewNum.number = (int*)realloc(NewNum.number,NewNum.index*sizeof(int));
 	}
 	return NewNum;
 }
