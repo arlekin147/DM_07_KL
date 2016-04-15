@@ -1,1 +1,26 @@
 ﻿//Деление дробей (делитель отличен от нуля)
+/* Решетина Алла
+гр. 5307
+*/
+
+/* Описание значения, возвращаемого функцией:
+Функция возвращает дробь, являющуюся частным двух исходных. */
+//Используемые модули:
+//MUL_NN_N
+
+//Структура:
+struct RATIONAL
+{
+    NATURAL numerator;      //числитель дроби
+    NATURAL denominator;    //знаменатель дроби
+    short sign;             //знак
+}
+
+struct RATIONAL DIV_QQ_Q(RATIONAL first, RATIONAL second)
+{
+	struct RATIONAL result;
+	result.numerator = MUL_NN_N(first.numerator, second.denominator);
+	result.denominator = MUL_NN_N(first.denominator, second.numerator);
+	result.sign = (first.sign != second.sign);
+	return result;
+}
