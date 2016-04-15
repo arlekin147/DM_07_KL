@@ -1,1 +1,34 @@
 ﻿//Вычитание дробей
+/* Решетина Алла
+гр. 5307
+*/
+
+/* Описание значения, возвращаемого функцией:
+Функция возвращает дробь, являющуюся разностью двух исходных. */
+//Используемые модули:
+//LCM_NN_N
+//MUL_NN_N
+//SUB_NN_N
+//DIV_NN_N
+
+//Структура:
+struct RATIONAL
+{
+    INTEGER numerator;      //числитель дроби
+    NATURAL denominator;    //знаменатель дроби
+    short sign;             //знак
+}
+
+struct RATIONAL SUB_QQ_Q(RATIONAL first, RATIONAL second)
+{
+    RATIONAL result;           						//возвращаемая дробь 
+    NATURAL NOK = LCM_NN_N(denominator.first, denominator.second); 	//общий знаменатель дробей
+    NATURAL add_1 = DIV_NN_N(NOK, first.denominator);			//дополнительный множитель 1 дроби
+    NATURAL add_2 = DIV_NN_N(NOK, second.denominator);			//дополнительный множитель 2 дроби
+    add_1 = MUL_NN_N(add_1, first.numerator);
+    add_2 = MUL_NN_N(add_2, second.numerator);
+    result.numerator = SUB_NN_N(add_1, add_2); 				//разность числителей
+    result.denominator = NOK;			
+    result.sign = first.sign;
+    return result;
+}
