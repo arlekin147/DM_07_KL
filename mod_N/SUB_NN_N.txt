@@ -1,58 +1,1571 @@
-﻿//Вычитание из первого большего натурального числа
-//второго меньшего или равного
-//Ишметов 5307
-struct NATURAL SUB_NN_N(struct NATURAL x, struct NATURAL y)
+﻿
+// di.cpp: определяет точку входа для консольного приложения.
+//
+
+#include "stdafx.h"
+#include <stdio.h>
+#include <iostream>
+#include <conio.h>
+#include <windows.h>
+
+#define _CRT_SECURE_NO_WARNINGS
+
+struct NATURAL
+{
+	int * number; // указатель на массив цифр числа 
+	int index; //номер старшего разряда 
+};
+
+struct INTEGER
+{
+	struct NATURAL natural_part; // модуль числа 
+	short sign; // знак числа (0 - положительное, 1 - отрицательное) 
+};
+
+struct RATIONAL
+{
+	struct NATURAL numerator; // числитель 
+	struct NATURAL denominator; // знаменатель 
+	short sign; // знак 
+};
+
+struct POLYNOMIAL
+{
+	struct RATIONAL* factors; // указатель на массив коэффициентов 
+	int degree; // старшая степень 
+};
+
+
+//НАТУРАЛЬНЫЕ 
+struct NATURAL LCM_NN_N(struct NATURAL, struct NATURAL);
+struct NATURAL MUL_ND_N(struct NATURAL, int);
+struct NATURAL ADD_1N_N(struct NATURAL);
+struct NATURAL ADD_NN_N(struct NATURAL, struct NATURAL);
+struct NATURAL COM_NN_D(struct NATURAL);
+struct NATURAL DIV_NN_Dk(struct NATURAL, struct NATURAL, int);
+struct NATURAL DIV_NN_N(struct NATURAL, struct NATURAL);
+struct NATURAL GCF_NN_N(struct NATURAL, struct NATURAL);
+struct NATURAL MOD_NN_N(struct NATURAL, struct NATURAL);
+struct NATURAL MUL_Nk_N(struct NATURAL, int);
+struct NATURAL MUL_NN_N(struct NATURAL, struct NATURAL);
+bool NZER_N_B(struct NATURAL);
+struct NATURAL SUB_NDN_N(struct NATURAL, struct NATURAL, int);
+struct NATURAL SUB_NN_N(struct NATURAL, struct NATURAL);
+
+//ЦЕЛЫЕ 
+struct NATURAL ABS_Z_N(struct INTEGER);
+struct INTEGER ADD_ZZ_Z(struct INTEGER, struct INTEGER);
+struct INTEGER DIV_ZZ_Z(struct INTEGER, struct INTEGER);
+struct INTEGER MOD_ZZ_Z(struct INTEGER, struct INTEGER);
+struct INTEGER MUL_Z_Z(struct INTEGER);
+struct INTEGER MUL_ZZ(struct INTEGER);
+struct INTEGER MUL_ZZ_Z(struct INTEGER, struct INTEGER);
+int POZ_Z_D(struct INTEGER);
+struct INTEGER SUB_ZZ_Z(struct INTEGER, struct INTEGER);
+struct INTEGER TRANS_N_Z(struct NATURAL);
+struct NATURAL TRANS_Z_N(struct INTEGER);
+
+//РАЦИОНАЛЬНЫЕ 
+struct RATIONAL ADD_QQ_Q(struct RATIONAL, struct RATIONAL);
+//struct RATIONAL DIV_QQ_Q(struct RATIONAL, struct RATIONAL);
+int INT_Q_Z(struct RATIONAL);
+struct RATIONAL MUL_QQ_Q(struct RATIONAL, struct RATIONAL);
+struct RATIONAL RED_QQ_Q(struct RATIONAL);
+struct RATIONAL SUB_QQ_Q(struct RATIONAL, struct RATIONAL);
+struct INTEGER TRANS_Z_Q(struct RATIONAL);
+struct RATIONAL TRANS_Z_Q(struct INTEGER);
+
+//ПОЛИНОМЫ 
+struct POLYNOMIAL ADD_PP_P(struct POLYNOMIAL, struct POLYNOMIAL);
+struct INTEGER DEG_P_N(struct POLYNOMIAL);
+struct POLYNOMIAL DER_P_P(struct POLYNOMIAL);
+struct POLYNOMIAL DIV_PP_P(struct POLYNOMIAL, struct POLYNOMIAL);
+struct POLYNOMIAL FAC_P_PQ(struct POLYNOMIAL, struct RATIONAL);
+struct POLYNOMIAL GCF_PP_P(struct POLYNOMIAL, struct POLYNOMIAL);
+struct RATIONAL LED_P_Z(struct POLYNOMIAL);
+struct POLYNOMIAL MOD_PP_P(struct POLYNOMIAL, struct POLYNOMIAL);
+struct POLYNOMIAL MUL_P_Q(struct POLYNOMIAL, struct RATIONAL);
+struct POLYNOMIAL MUL_PP_P(struct POLYNOMIAL, struct POLYNOMIAL);
+struct POLYNOMIAL MUL_Pxk_p(struct POLYNOMIAL, int);
+struct POLYNOMIAL NMR_P_P(struct POLYNOMIAL);
+struct POLYNOMIAL SUB_PP_P(struct POLYNOMIAL, struct POLYNOMIAL);
+
+
+void about()
+{
+	printf("Коллоквиум по дисциплине ДМ 2016г. \n");
+	printf(" --------------------------------------------------------------------------\n");
+	printf(" Над проектом работали:\n");
+	printf(" Васильева Людмила Юрьевна MUL_Pxk_P FAC_P_PQ NMR_P_P \n");
+	printf(" Власов Данил Юрьевич MUL_Nk_N MUL_NN_N DER_P_P\n");
+	printf(" Джурумбаева Злата Александровна NZER_N_B ADD_1N_N MUL_ND_N MUL_PP_P\n");
+	printf(" Дудко Кирилл Дмитриевич SUB_NDN_N DIV_NN_Dk GCF_PP_P \n");
+	printf(" Изотов Андрей Владимирович GCF_NN_N LCM_NN_N\n");
+	printf(" Икренникова Диана Сергеевна TRANS_Z_N TRANS_N_Z TRAN_Z_Q TRAN_Q_Z\n");
+	printf(" Ишметов Владислав Александрович COM_NN_D ADD_NN_N SUB_NN_N\n");
+	printf(" Петров Игорь Павлович DIV_PP_P MOV_PP_P\n");
+	printf(" Плотников Юрий Сергеевич RED_Q_Q INT_Q_Z MUL_P_Q \n");
+	printf(" Правиленко Михаил Алексеевич DIV_NN_N MOD_NN_N\n");
+	printf(" Решетина Алла Сергеевна SUB_QQ_Q DIV_QQ_Q\n");
+	printf(" Сахаров Илья Владимирович ABS_Z_N POZ_Z_D MUL_Z - _Z ADD_ZZ_Z SUB_ZZ_Z\n");
+	printf(" Супряга Анастасия Сергеевна ADD_PP_P SUB_PP_P LED_P_Z DEG_P_N\n");
+	printf(" Трубицын Илья Юрьевич ADD_QQ_Q MUL_QQ_Q\n");
+	printf(" --------------------------------------------------------------------------\n");
+	printf(" Икренникова Диана Сергеевна: Управление качеством\n");
+	printf(" Шелякин Антон Дмитриевич: Архитектор\n");
+	printf(" --------------------------------------------------------------------------\n");
+
+
+}
+
+
+void menu()
+{
+	printf(" --------------------------------------------------------------------------\n");
+	printf("1)Натуральные \n");
+	printf("2)Целые \n");
+	printf("3)Рациональные \n");
+	printf("4)Полиномы \n");
+	printf("5)Справка\n");
+	printf("0)Назад\n");
+	printf(" --------------------------------------------------------------------------\n");
+}
+
+void menuNAT()
+{
+	printf(" --------------------------------------------------------------------------\n");
+	printf("1)Сложение \n");
+	printf("2)Вычитание \n");
+	printf("3)Умножение \n");
+	printf("4)Деление \n");
+	printf("5)НОД \n");
+	printf("6)НОК \n");
+	printf("0)Назад \n");
+	printf(" --------------------------------------------------------------------------\n");
+}
+
+
+void menuINT()
+{
+	printf(" --------------------------------------------------------------------------\n");
+	printf("1)Сложение \n");
+	printf("2)Вычитание \n");
+	printf("3)Умножение \n");
+	printf("4)Частное от деления\n");
+	printf("5)Остаток от деления\n");
+	printf("0)Назад \n");
+	printf(" --------------------------------------------------------------------------\n");
+}
+
+void menuRAZ()
+{
+	printf(" --------------------------------------------------------------------------\n");
+	printf("1)Сложение \n");
+	printf("2)Вычитание \n");
+	printf("3)Умножение \n");
+	printf("4)Деление \n");
+	printf("5)Сокращение \n");
+	printf("0)Назад \n");
+	printf(" --------------------------------------------------------------------------\n");
+}
+
+void menuPOL()
+{
+	printf(" --------------------------------------------------------------------------\n");
+	printf("1)Сложение \n");
+	printf("2)Вычитание \n");
+	printf("3)Умножение \n");
+	printf("4)Деление \n");
+	printf("5)Производная \n");
+	printf("6)НОД \n");
+	printf("7)Умножение на рациональное \n");
+	printf("8)Деление \n");
+	printf("9)Кратные корни в простые \n");
+	printf("0)Назад \n");
+	printf(" --------------------------------------------------------------------------\n");
+}
+
+
+
+bool Zero(NATURAL a)         //проверка, является ли натуральное число 0
+{
+	if (a.index == 1 && *(a.number) == 0)
+		return 1;
+	else return 0;
+}
+
+char* inputStr()		//ввод строки, допустимы только цифры
+{
+	char* str;
+	rewind(stdin);
+	str = NULL;
+	int l = 0;
+	char f;
+	rewind(stdin);
+	str = (char*)malloc(sizeof(char));
+	do
 	{
-		NATURAL answ;
-		if (COM_NN_D(x, y) == 0)
+		while ((*(str + l) = _getch()) != '\r' && l<15)
+		{
+			if (*(str + l) == '\b')
 			{
-				answ.index = 1;
-				answ.number = new int(answ.index);
-				answ.number[0] = 0;
+				if (l>0)
+				{
+					l--;
+					printf("\b \b");
+				}
+			}
+			else
+				if ((*(str + l) >= '0' && *(str + l) <= '9'))
+				{
+				putchar(*(str + l));
+				l++;
+				}
+			str = (char*)realloc(str, sizeof(char)*(l + 2));
+		}
+		printf("\n");
+		*(str + l) = '\0';
+	} while (l == 0);
+	return str;
+}
+
+int getSign()		//ввод знака числа
+{
+	char sign_;
+	int sign;
+	do
+	{
+		printf("Введите знак (+ - положительное, - - отрицательное)\n");
+		rewind(stdin);
+		scanf_s("%c", &sign_);
+		if (sign_ == '+')
+			sign = 0;
+		if (sign_ == '-')
+			sign = 1;
+		if (sign_ != '+' && sign_ != '-')
+			printf("Вы ввели недопустимый символ\nПовторите ввод\n");
+	} while (sign_ != '+' && sign_ != '-');
+	return sign;
+}
+
+NATURAL getNut()      //ввод натурального
+{
+	NATURAL a;
+	char *a1 = NULL;
+	a1 = inputStr();
+	int l = strlen(a1);
+	a.index = l;
+	int j = l;
+	a.number = (int*)malloc(j * sizeof(int));
+	for (int i = 0; i < l; i++)
+	{
+		*(a.number + j - 1) = *(a1 + i) - '0';
+		j--;
+	}
+	return a;
+}
+
+
+INTEGER getInt()   //ввод целого
+{
+	INTEGER a;
+	a.sign = getSign();
+	printf("Введите абсолютную величину числа \n");
+	a.natural_part = getNut();
+	return a;
+}
+
+RATIONAL getRat()   //ввод рационального
+{
+	RATIONAL a;
+	a.sign = getSign();
+	printf("Введите числитель\n");
+	a.numerator = getNut();
+	do
+	{
+		printf("Введите знаменатель\n");
+		a.denominator = getNut();
+		if (Zero(a.denominator))
+			printf("Знаменатель не может быть равен 0\nПовторите ввод\n");
+	} while (Zero(a.denominator));
+	return a;
+}
+
+
+POLYNOMIAL getPol()    //ввод многочлена
+{
+	POLYNOMIAL a;
+	printf("Введите степень многочлена. Она должна быть неотрицательным числом\n");
+	do
+	{
+		fflush(stdin);
+		scanf_s("%i", &a.degree);
+		if (a.degree<0)
+			printf("Степень многочлена должна быть неотрицательным числом\nПовторите ввод\n");
+	} while (a.degree<0);
+	a.factors = (RATIONAL*)malloc(a.degree * sizeof(RATIONAL));
+	for (int i = 0; i <= a.degree; i++)
+	{
+		system("cls");
+		printf("Введите коэффициент перед x^%i\n", i);
+		*(a.factors + i) = getRat();
+	}
+	return a;
+}
+
+
+void outputNut(NATURAL a)   //вывод натурального
+{
+	int l = a.index;
+	for (int i = l - 1; i >= 0; i--)
+	{
+		printf("%i", *(a.number + i));
+	}
+}
+
+
+void outputInt(INTEGER a)             //вывод целого
+{
+	if (a.sign == 0)
+		outputNut(a.natural_part);
+	else
+		printf("%c", '-');
+	outputNut(a.natural_part);
+}
+
+
+void outputRat(RATIONAL a)      //вывод рационального
+{
+	if (a.sign == 1)
+		printf("%c", '-');
+	outputNut(a.numerator);
+	printf("%c", '/');
+	outputNut(a.denominator);
+}
+
+
+void outputPol(POLYNOMIAL a)    //вывод многочлена
+{
+	RATIONAL t;
+	for (int i = a.degree; i >= 0; i--)
+	{
+		t = *(a.factors + i);
+		if (t.sign == 1)
+			outputRat(t);
+		else
+		{
+			printf("+");
+			outputRat(t);
+		}
+		printf("x^%i", i);
+	}
+}
+
+
+int main(void)
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+	NATURAL a, b, c, d;
+	INTEGER a1, b1, c1, d1;
+	RATIONAL r_a, r_b, r_c, r_d;
+	POLYNOMIAL p_a, p_b, p_c, p_d;
+
+	int i;
+	int menuNAT1;
+	int menuINT1;
+	int menuRAZ1;
+	int menuPOL1;
+
+	int menu_main;
+	do {
+		system("cls");
+		menu();
+		scanf_s("%d", &menu_main);
+		switch (menu_main)
+		{
+		case 1:
+			do{
+				system("cls");
+				menuNAT();
+				scanf_s("%d", &menuNAT1);
+				switch (menuNAT1)
+				{
+				case 1:
+					system("cls");
+					printf("Сложение натуральных чисел\n");
+					printf("Введите первое число: \n");
+					a = getNut();
+					printf("Введите второе число: \n");
+					b = getNut();
+					c = ADD_NN_N(a, b);
+					printf("Результат: ");
+					outputNut(c);
+					printf("\n");
+					system("pause");
+					break;
+				case 2:
+					system("cls");
+					printf("Вычитание натуральных чисел\n");
+					printf("Введите первое число: \n");
+					a = getNut();
+					printf("Введите второе число: \n");
+					b = getNut();
+					c = SUB_NN_N(a, b);
+					printf("Результат: ");
+					outputNut(c);
+					printf("\n");
+					system("pause");
+					break;
+				case 3:
+					system("cls");
+					printf("Умножение натуральных чисел\n");
+					printf("Введите первое число: \n");
+					a = getNut();
+					printf("Введите второе число: \n");
+					b = getNut();
+					c = MUL_NN_N(a, b);
+					printf("Результат: ");
+					outputNut(c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 4:
+					system("cls");
+					printf("Деление натуральных чисел\n");
+					printf("Введите первое число: \n");
+					a = getNut();
+					printf("Введите второе число: \n");
+					b = getNut();
+					c = DIV_NN_N(a, b);
+					printf("Частное: ");
+					d = MOD_NN_N(a, b);
+					printf("\nОстаток: ");
+					outputNut(d);
+					printf("\n");
+					system("pause");
+					break;
+				case 5:
+					system("cls");
+					printf("НОД натуральных чисел\n");
+					printf("Введите первое число: \n");
+					a = getNut();
+					printf("Введите второе число: \n");
+					b = getNut();
+					c = GCF_NN_N(a, b);
+					printf("Результат: ");
+					outputNut(c);
+					printf("\n");
+					system("pause");
+					break;
+				case 6:
+					system("cls");
+					printf("НОК натуральных чисел\n");
+					printf("Введите первое число: \n");
+					a = getNut();
+					printf("Введите второе число: \n");
+					b = getNut();
+					c = LCM_NN_N(a, b);
+					printf("Результат: ");
+					outputNut(c);
+					printf("\n");
+					system("pause");
+					break;
+				default:
+					break;
+				}
+			} while (menuNAT1 != 0);
+			break;
+
+		case 2:
+			do{
+				system("cls");
+				menuINT();
+				scanf_s("%d", &menuINT1);
+				switch (menuINT1)
+				{
+				case 1:
+					system("cls");
+					printf("Сложение целых чисел\n");
+					printf("Введите первое число: \n");
+					a1 = getInt();
+					printf("Введите второе число: \n");
+					b1 = getInt();
+					c1 = ADD_ZZ_Z(a1, b1);
+					printf("Результат: ");
+					outputInt(c1);
+					printf("\n");
+					system("pause");
+					break;
+				case 2:
+					system("cls");
+					printf("Вычитание целых чисел\n");
+					printf("Введите первое число: \n");
+					a1 = getInt();
+					printf("Введите второе число: \n");
+					b1 = getInt();
+					c1 = SUB_ZZ_Z(a1, b1);
+					printf("Результат: ");
+					outputInt(c1);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 3:
+					system("cls");
+					printf("Умножение целых чисел\n");
+					printf("Введите первое число: \n");
+					a1 = getInt();
+					printf("Введите второе число: \n");
+					b1 = getInt();
+					c1 = MUL_ZZ_Z(a1, b1);
+					printf("Результат: ");
+					outputInt(c1);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 4:
+					system("cls");
+					printf("Частное целых чисел\n");
+					printf("Введите первое число: \n");
+					a1 = getInt();
+					printf("Введите второе число: \n");
+					b1 = getInt();
+					c1 = DIV_ZZ_Z(a1, b1);
+					printf("Результат: ");
+					outputInt(c1);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 5:
+					system("cls");
+					printf("Остаток от деления целых чисел\n");
+					printf("Введите первое число: \n");
+					a1 = getInt();
+					printf("Введите второе число: \n");
+					b1 = getInt();
+					c1 = MOD_ZZ_Z(a1, b1);
+					printf("Результат: ");
+					outputInt(c1);
+					printf("\n");
+					system("pause");
+					break;
+				}
+
+			} while (menuINT1 != 0);
+			break;
+		case 3:
+			do{
+				system("cls");
+				menuRAZ();
+				scanf_s("%d", &menuRAZ1);
+				switch (menuRAZ1)
+				{
+				case 1:
+					system("cls");
+					printf("Сложение\n");
+					printf("Введите первое число: \n");
+					r_a = getRat();
+					printf("Введите второе число: \n");
+					r_b = getRat();
+					r_c = ADD_QQ_Q(r_a, r_b);
+					printf("Результат: ");
+					outputRat(r_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 2:
+					system("cls");
+					printf("Вычитание\n");
+					printf("Введите первое число: \n");
+					r_a = getRat();
+					printf("Введите второе число: \n");
+					r_b = getRat();
+					r_c = SUB_QQ_Q(r_a, r_b);
+					printf("Результат: ");
+					outputRat(r_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 3:
+					system("cls");
+					printf("Умножение\n");
+					printf("Введите первое число: \n");
+					r_a = getRat();
+					printf("Введите второе число: \n");
+					r_b = getRat();
+					r_c = ADD_QQ_Q(r_a, r_b);
+					printf("Результат: ");
+					outputRat(r_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 4:////////////////////////////////
+					system("cls");
+					printf("Деление\n");
+					printf("Введите первое число: \n");
+					r_a = getRat();
+					printf("Введите второе число: \n");
+					r_b = getRat();
+					//r_c = DIV_QQ_Q(r_a, r_b);
+					printf("Результат: ");
+					outputRat(r_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 5:
+					system("cls");
+					printf("Сокращение\n");
+					printf("Введите первое число: \n");
+					r_a = getRat();
+					printf("Введите второе число: \n");
+					r_b = getRat();
+					r_c = ADD_QQ_Q(r_a, r_b);
+					printf("Результат: ");
+					outputRat(r_c);
+					printf("\n");
+					system("pause");
+					break;
+				}
+
+			} while (menuRAZ1 != 0);
+			break;
+
+		case 4:
+			do{
+				system("cls");
+				menuPOL();
+				scanf_s("%d", &menuPOL1);
+				switch (menuPOL1)
+				{
+					printf("1)Сложение \n");
+					printf("2)Вычитание \n");
+					printf("3)Умножение \n");
+					printf("4)Деление \n");
+					printf("5)Производная \n");
+					printf("6)НОД \n");
+					printf("7)Умножение на рациональное \n");
+					printf("8)Деление \n");
+					printf("9)с \n");
+
+				case 1:
+					system("cls");
+					printf("Сложение\n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					printf("Введите второе число: \n");
+					p_b = getPol();
+					p_c = ADD_PP_P(p_a, p_b);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 2:
+					system("cls");
+					printf("Вычитание\n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					printf("Введите второе число: \n");
+					p_b = getPol();
+					p_c = SUB_PP_P(p_a, p_b);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 3:
+					system("cls");
+					printf("Умножение\n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					printf("Введите второе число: \n");
+					p_b = getPol();
+					p_c = MUL_PP_P(p_a, p_b);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 4:
+					system("cls");
+					printf("Деление\n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					printf("Введите второе число: \n");
+					p_b = getPol();
+					p_c = DIV_PP_P(p_a, p_b);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 5:
+					system("cls");
+					printf("Производная\n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					p_c = DER_P_P(p_a);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 6:
+					system("cls");
+					printf("НОД\n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					printf("Введите второе число: \n");
+					p_b = getPol();
+					p_c = GCF_PP_P(p_a, p_b);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 7:
+					system("cls");
+					printf("Деление\n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					printf("Введите второе число: \n");
+					p_b = getPol();
+					p_c = DIV_PP_P(p_a, p_b);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 8:
+					system("cls");
+					printf("Умножение на рациональное \n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					printf("Введите второе число: \n");
+					r_b = getRat();
+					p_c = MUL_P_Q(p_a, r_b);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");
+					break;
+
+				case 9:
+					/*("cls");
+					printf("Кратные корни в простые\n");
+					printf("Введите первое число: \n");
+					p_a = getPol();
+					printf("Введите второе число: \n");
+					p_b = getPol();
+					p_c = DIV_QQ_Q(p_a, p_b);
+					printf("Результат: ");
+					outputPol(p_c);
+					printf("\n");
+					system("pause");*/
+					break;
+				}
+			} while (menuPOL1 != 0);
+
+			break;
+
+		case 5:
+			system("cls");
+			about();
+			system("pause");
+
+			break;
+
+		}
+	} while (menu_main != 0);
+	return 0;
+}
+
+//Ишметов 5307
+short COM_NN_D(struct NATURAL x, struct NATURAL y)
+{
+	short answ = 0;
+	if (x.index != y.index)
+		if (x.index > y.index)
+			answ = 2;
+		else
+			answ = 1;
+	else
+		for (short i = x.index - 1; (i >= 0) && (answ == 0); i--)
+			if ((x.number[i]) > (y.number[i]))
+				answ = 2;
+			else
+				if ((x.number[i]) < (y.number[i]))
+					answ = 1;
+	return answ;
+
+}
+
+
+//Сложение натуральных чисел
+// Ишметов 5307
+
+struct NATURAL ADD_NN_N(struct NATURAL x, struct NATURAL y)
+{
+	NATURAL answ;
+	if (COM_NN_D(x, y) == 2)
+	{
+		answ.index = x.index;
+		for (short i = x.index - 1; i >= y.index; i--)
+			y.number[i] = 0;
+	}
+	else
+	{
+		answ.index = y.index;
+		for (short i = y.index - 1; i >= x.index; i--)
+			x.number[i] = 0;
+	}
+	answ.number = new int[answ.index];
+	answ.number[0] = 0;
+	for (short i = 0; i < answ.index; i++)
+	{
+		answ.number[i] = answ.number[i] + x.number[i] + y.number[i];
+		if (answ.number[i] > 9)
+		{
+			answ.number[i] = answ.number[i] - 10;
+			answ.number[i + 1] = 1;
+		}
+		else
+			answ.number[i + 1] = 0;
+	}
+	if (answ.number[answ.index] > 0)
+		answ.index++;
+	return answ;
+}
+
+
+
+struct NATURAL SUB_NN_N(struct NATURAL x, struct NATURAL y)
+{
+	NATURAL answ;
+	if (COM_NN_D(x, y) == 0)
+	{
+		answ.index = 1;
+		answ.number = new int(answ.index);
+		answ.number[0] = 0;
+	}
+	else
+	{
+		if (COM_NN_D(x, y) == 2)
+		{
+			answ.index = x.index;
+			for (short i = x.index - 1; i >= y.index; i--)
+				y.number[i] = 0;
+		}
+		else
+		{
+			answ.index = y.index;
+			for (short i = y.index - 1; i >= x.index; i--)
+				x.number[i] = 0;
+		}
+		answ.number = new int[answ.index];
+		answ.number[0] = 0;
+		if (COM_NN_D(x, y) == 2)
+			for (short i = 0; i < answ.index; i++)
+			{
+			answ.number[i] = answ.number[i] + x.number[i] - y.number[i];
+			if (answ.number[i] <0)
+			{
+				answ.number[i] = 10 + answ.number[i];
+				answ.number[i + 1] = -1;
+			}
+			else
+				answ.number[i + 1] = 0;
 			}
 		else
+			for (short i = 0; i < answ.index; i++)
 			{
-				if (COM_NN_D(x, y) == 2)
-					{
-						answ.index = x.index;
-						for (short i = x.index - 1; i >= y.index; i--)
-							y.number[i] = 0;
-					}
-				else
-					{
-						answ.index = y.index;
-						for (short i = y.index - 1; i >= x.index; i--)
-							x.number[i] = 0;
-					}
-				answ.number = new int[answ.index];
-				answ.number[0] = 0;
-				if (COM_NN_D(x, y) == 2)
-					for (short i = 0; i < answ.index; i++)
-						{
-							answ.number[i] = answ.number[i] + x.number[i] - y.number[i];
-							if (answ.number[i] <0)
-								{
-									answ.number[i] =10+ answ.number[i];
-									answ.number[i + 1] = -1;
-								}
-							else
-								answ.number[i + 1] = 0;
-						}
-				else
-					for (short i = 0; i < answ.index; i++)
-						{
-							answ.number[i] = answ.number[i] + y.number[i] - x.number[i];
-							if (answ.number[i] <0)
-								{
-									answ.number[i] = 10 + answ.number[i];
-									answ.number[i + 1] = -1;
-								}
-							else
-								answ.number[i + 1] = 0;
-						}
-				for (short i = answ.index - 1; (i >= 0)&&(answ.number[i]==0);i--)
-					answ.index--;
+			answ.number[i] = answ.number[i] + y.number[i] - x.number[i];
+			if (answ.number[i] <0)
+			{
+				answ.number[i] = 10 + answ.number[i];
+				answ.number[i + 1] = -1;
 			}
-		return answ;
-
+			else
+				answ.number[i + 1] = 0;
+			}
+		for (short i = answ.index - 1; (i >= 0) && (answ.number[i] == 0); i--)
+			answ.index--;
 	}
+	return answ;
+
+}
+
+//Умножение натуральных чисел
+//Власов Д.Ю 5307
+NATURAL MUL_NN_N(NATURAL num1, NATURAL num2)
+{
+	int add = 0; //Добавочное значение
+	int	buffer;	 //Значение разряда до следующего изменения
+	int j, i;
+	NATURAL NewNum; //Произведение двух чисел
+	NewNum.number = (int*)malloc((num1.index + num2.index)*sizeof(int));
+	NewNum.index = num1.index + num2.index;
+	for (i = 0; i < NewNum.index; i++)
+		NewNum.number[i] = 0;
+	for (i = 0; i < num1.index; i++)
+	{
+		add = 0;
+		for (j = 0; j < num2.index; j++)
+		{
+			buffer = NewNum.number[j + i];
+			//Возможность подключения модуля MUL_ND_N
+			NewNum.number[j + i] = (NewNum.number[j + i] + (num2.number[j] * num1.number[i] % 10) + add) % 10;
+			add = (buffer + (num2.number[j] * num1.number[i]) + add) / 10;
+		}
+		NewNum.number[j + i] = add;
+	}
+	return NewNum;
+}
+
+
+//Умножение натурального числа на цифру
+
+//Джурумбаева 5307
+
+struct NATURAL MUL_ND_N(struct NATURAL original, int digit)
+{
+	struct NATURAL product;
+
+	if (!digit)
+	{
+		product.index = 1;
+		product.number = (int*)calloc(product.index, sizeof(int));
+		return product;
+	}
+	else
+	{
+		int tmp;
+		int i = 0;
+
+		product.index = original.index + 1;
+		product.number = (int*)calloc(product.index, sizeof(int));
+
+		while (i < original.index)
+		{
+			tmp = original.number[i] * digit;
+			product.number[i] += tmp % 10;
+			product.number[++i] += tmp / 10;
+		}
+
+		if (!product.number[original.index])
+			product.index--;
+
+		return product;
+	}
+}
+
+//Умножение натурального числа на 10^k
+//Власов Д.Ю 5307
+NATURAL MUL_Nk_N(NATURAL num, int k)
+{
+	NATURAL NewNum;
+	NewNum.index = num.index + k;
+	NewNum.number = (int*)malloc(NewNum.index*sizeof(int));
+	for (int i = 0; i < k; i++)
+		NewNum.number[i] = 0;
+	for (int i = k; i < NewNum.index; i++)
+		NewNum.number[i] = num.number[i - k];
+	return NewNum;
+}
+
+//Вычитание из натурального другого натурального,
+//умноженного на цифру
+//для случая с неотрицательным результатом
+//Дудко Кирилл, группа 5307
+
+
+NATURAL SUB_NDN_N(NATURAL long1, NATURAL long2, int n)
+{
+	NATURAL test;
+	if (COM_NN_D(long1, MUL_ND_N(long2, n)) == 2)//Сравнение long1 и n*long2, если long 1 больше, то 2, иначе 1 
+		test = SUB_NN_N(long1, MUL_ND_N(long2, n));//test=long1-n*long2
+	else
+		test = SUB_NN_N(long1, long2);//long1-long2
+	return test;
+}
+
+
+//Вычисление первой цифры деления большего натурального на меньшее,
+//домноженное на 10^k, где k - номер позиции этой цифры (номер считается с нуля)
+// Кирилл Дудко, группа 5307
+
+NATURAL DIV_NN_Dk(NATURAL long1, NATURAL long2, int k)
+{
+	int i;
+	int x = 0;
+	int f = 1;
+	int y;
+	int index;
+	int INDEX;
+	NATURAL test;
+	if (COM_NN_D(long1, long2) == 1)//Сравнение long1 и long2, если long 1 больше, то 2, иначе 1 
+	{
+		test = long1;            //////////// Если long 2 больше
+		long1 = long2;           //////////// то меняем long 1 и
+		long2 = test;            //////////// long 2 местами
+	}
+	INDEX = long1.index - long2.index;      //Вычисляем максимальный возможный размер частного
+	if (k<INDEX)                           // Проверяем заданный номер искомой цифры на то, что бы был не больше максимального
+	{
+		for (i = INDEX; i > k; i--)
+		{
+			index = long1.index - long2.index; //Вычисляем номер цифры, которую получим на данном этапе
+			if (long1.number[long1.index - 1] > long2.number[long2.index - 1]) //Проверяем, что бы цифра старшего разряда первого числа  
+			{														           // была больше цифры старшего разряда второго числа
+				x = long1.number[long1.index - 1] / long2.number[long2.index - 1];      //Находим частное от деления цифр старших разрядов чисел
+				if (COM_NN_D(MUL_ND_N(MUL_Nk_N(long2, index), x), long1) == 2)			//Если второе число умноженное на х больше первого					x--;															    //
+					long1 = SUB_NN_N(long1, MUL_ND_N(MUL_Nk_N(long2, index), x));			//то уменьшаем х на один и делаем long1=long1-((long1*10^index)*x)
+			}
+			else                                                                     // Если же цифра старшего разряда первого числа меньше чем у второго числа
+			{                                                                        // то находим частное от деления цифр двух старших разрядов первого числа
+				x = (long1.number[long1.index - 1] * 10 + long1.number[long1.index - 2]) / long2.number[long2.index - 1];   //  на старший разряд второго и делаем то же самое
+				if (COM_NN_D(MUL_ND_N(MUL_Nk_N(long2, index), x), long1) == 2)
+					x--;
+				long1 = SUB_NN_N(long1, MUL_ND_N(MUL_Nk_N(long2, index), x));
+			}
+		}
+		test.index = 0;
+		test.number = new int[1];
+		*test.number = x;
+		test = MUL_Nk_N(test, k);         // умножаем полученное число на 10^k
+		return test;
+	}
+	else
+		printf("Ошибка!");
+}
+
+
+
+//Частное от деления большего натурального числа на меньшее
+//или равное натуральное с остатком (делитель отличен от нуля)
+
+/*---
+Правиленко Михаил гр. 5307
+Pre-Alpha
+---
+
+Используемые модули:
+DIV_NN_Dk
+SUB_NDN_N*/
+
+struct NATURAL DIV_NN_N(struct NATURAL a, struct NATURAL b)
+{
+	struct NATURAL temp;  //Временное делимое
+	struct NATURAL minus; //Остаток от деления на i-ом шаге
+	struct NATURAL c;     //Частное
+	int k;		      //Номер разряда частного
+	int countdown;        //Размер врем. делимого на i-ом шаге
+	int *resize;	      //Временное хранение c
+
+	c.index = a.index - b.index + 1;
+	c.number = new int[c.index];
+
+	k = c.index - 1;
+
+	temp.index = a.index;
+	temp.number = new int[temp.index];
+
+	minus.index = b.index;
+	minus.number = new int[minus.index];
+
+	for (int i = 0; i<temp.index; i++)
+		temp.number[i] = a.number[i];
+
+	countdown = a.index;
+
+	do
+	{
+		c = DIV_NN_Dk(temp, b, k); //temp - делимое, b - делитель, k - номер позиции (temp и k изменяются в ходе выполнения модуля
+		minus = SUB_NDN_N(temp, b, c.number[k]); // temp - уменьшаемое, b - вычитаемое, c.number[k] - множитель
+
+		delete[] temp.number;
+		temp.number = nullptr;
+
+		temp.index = countdown - temp.index + minus.index;
+		temp.number = new int[temp.index];
+		countdown = temp.index;
+
+		for (int i = 0; i<temp.index - minus.index; i++)
+			temp.number[i] = a.number[i];
+		for (int i = minus.index; i<temp.index; i++)
+			temp.number[i] = minus.number[i];
+
+		k--;
+	} while (k>0);
+
+	resize = new int[c.index];     //Отсечение пустых элементов массива
+	for (int i = 0; i<c.index; i++)
+		resize[i] = c.number[i];
+	delete[] c.number;
+	c.number = nullptr;
+	c.number = new int[c.index];
+	for (int i = 0; i<c.index; i++)
+		c.number[i] = resize[i];
+
+	return c;
+}
+
+
+//Остаток от деления большего натурального числа на меньшее
+// или равное натуральное с остатком (делитель отличен от нуля)
+
+/*---
+Правиленко Михаил гр. 5307
+Pre-Alpha
+---
+
+Используемые модули:
+DIV_NN_N
+SUB_NDN_N*/
+
+struct NATURAL MOD_NN_N(struct NATURAL a, struct NATURAL b)
+{
+	struct NATURAL div;     //Частное
+	struct NATURAL mod;     //Остаток
+	struct NATURAL factor;  //Множитель цифр частного
+	int *resize;            //Временное хранение чисел
+
+	div.index = a.index - b.index + 1;
+	div.number = new int[div.index];
+
+	div = DIV_NN_N(a, b);
+
+	resize = new int[a.index];          //Отсечение пустых элементов div
+	for (int i = 0; i<div.index; i++)
+		resize[i] = div.number[i];
+	delete[] div.number;
+	div.number = nullptr;
+	div.number = new int[div.index];
+	for (int i = 0; i<div.index; i++)
+		div.number[i] = resize[i];
+
+	factor.index = b.index;
+	factor.number = new int[factor.index];
+	for (int i = 0; i<factor.index; i++)
+		factor.number[i] = b.number[i];
+
+	mod.index = a.index;
+	mod.number = new int[mod.index];
+
+	for (int i = 0; i<div.index; i++)
+	{
+		if (i>0)
+		{
+			factor.index = factor.index + i;   //Умножение делителя на 10^i
+			for (int j = 0; j<factor.index; j++)
+				resize[j] = factor.number[j];
+			delete[] factor.number;
+			factor.number = nullptr;
+			factor.number = new int[factor.index];
+			factor.number[0] = 0;
+			for (int j = 0; j<factor.index; j++)
+				factor.number[j + 1] = resize[j];
+		}
+		mod = SUB_NDN_N(mod, factor, div.number[i]);
+	}
+
+	delete[] resize;            //Отсечение пустых элементов mod
+	resize = nullptr;
+	resize = new int[mod.index];
+	for (int i = 0; i<mod.index; i++)
+		resize[i] = mod.number[i];
+	delete[] mod.number;
+	mod.number = nullptr;
+	mod.number = new int[mod.index];
+	for (int i = 0; i<div.index; i++)
+		mod.number[i] = resize[i];
+
+	return mod;
+}
+
+
+//НОД натуральных чисел
+/*
+Подгружаемые модули:
+COM_NN_D
+NZER_N_B
+MOD_NN_N
+
+Изотов Андрей  5307
+*/
+
+struct NATURAL GCF_NN_N(struct NATURAL x, struct NATURAL y)
+{
+	struct NATURAL a;  //большее число
+	struct NATURAL b;  //меньшее число
+	struct NATURAL nod;
+	struct NATURAL mod;
+	int z;  //отвечает за сравнение чисел 
+	int i;
+	bool h = true;  //проверяет меньшее число на 0
+
+	z = COM_NN_D(x, y);
+	if (z == 2)  // если x >= y
+	{
+		a = x;
+		b = y;
+	}
+	if (z == 1)  // если x < y
+	{
+		a = y;
+		b = x;
+	}
+	do
+	{
+		h = NZER_N_B(b);
+		if (h == false)  // если меньшее число равно 0
+		{
+			nod.index = a.index;
+			nod.number = new int[nod.index];
+			for (i = 0; i < a.index; i++)
+				nod.number[i] = a.number[i];
+		}
+		else
+		{
+			mod = MOD_NN_N(a, b);
+			a = b;
+			b = mod;
+		}
+	} while (h == true);
+	return nod;
+}
+
+
+//Проверка на ноль:
+//если число не равно нулю 1
+//иначе 0
+
+//Джурумбаева 5307
+
+bool NZER_N_B(struct NATURAL original)
+{
+	bool check = FALSE; // маркер принадлежности числа 0 или 1
+	int i = 0;
+
+	while (i < original.index && !check) // пока цифры числа равны нулю
+		if (original.number[i++])
+			check = TRUE; // цифра числа не равна нулю
+
+	return check;
+}
+
+
+//НОК натуральных чисел
+/*
+Подгружаемые модули:
+GCF_NN_N
+MUL_NN_N
+DIV_NN_N
+
+Изотов Андрей 5307
+*/
+
+struct NATURAL LCM_NN_N(struct NATURAL x, struct NATURAL y)
+{
+	struct NATURAL nod;
+	struct NATURAL nok;
+	struct NATURAL op;
+
+	nod = GCF_NN_N(x, y); //вычисляем нод
+	op = MUL_NN_N(x, y); //вычисляем произведение чисел
+	nok = DIV_NN_N(op, nod); //вычисляем нок
+	return nok;
+}
+
+//Сахаров Илья Владимирович 5307
+//Сложение целых чисел
+
+INTEGER ADD_ZZ_Z(INTEGER firstTerm, INTEGER secondTerm)
+{
+	INTEGER result;
+	if (POZ_Z_D(firstTerm) == POZ_Z_D(secondTerm))
+	{
+		result.natural_part.number = ADD_NN_N(ABS_Z_N(firstTerm), ABS_Z_N(secondTerm)).number;
+		result.natural_part.index = ADD_NN_N(ABS_Z_N(firstTerm), ABS_Z_N(secondTerm)).index;
+		result.sign = firstTerm.sign;
+	}
+	else
+	{
+		switch (COM_NN_D(ABS_Z_N(firstTerm), ABS_Z_N(secondTerm)))
+		{
+		case 2:
+			result.natural_part.number = SUB_NN_N(ABS_Z_N(firstTerm), ABS_Z_N(secondTerm)).number;
+			result.natural_part.index = SUB_NN_N(ABS_Z_N(firstTerm), ABS_Z_N(secondTerm)).index;
+			result.sign = firstTerm.sign;
+			break;
+		case 1:
+			result.natural_part.number = SUB_NN_N(ABS_Z_N(secondTerm), ABS_Z_N(firstTerm)).number;
+			result.natural_part.index = SUB_NN_N(ABS_Z_N(secondTerm), ABS_Z_N(firstTerm)).index;
+			result.sign = secondTerm.sign;
+			break;
+		case 0:
+			result.natural_part.number = 0;
+			result.natural_part.index = 1;
+			result.sign = firstTerm.sign;
+			break;
+		}
+	}
+
+	return result;
+}
+
+//Сахаров Илья Владимирович 5307
+//Определение положительности числа
+//(1 - положительное, 0 — равное нулю, -1 - отрицательное)
+int POZ_Z_D(INTEGER taken)
+{
+	int pos = 0;
+	if (taken.natural_part.number != 0)
+	{
+		if (taken.sign == 0)
+			pos = 1;
+		else
+			pos = -1;
+	}
+
+	return pos;
+}
+
+//Сахаров Илья Владимирович 5307
+//Абсолютная величина числа, результат - натуральное
+
+NATURAL ABS_Z_N(INTEGER taken)
+{
+	NATURAL ret;
+	ret.number = taken.natural_part.number;
+	ret.index = taken.natural_part.index;
+
+	return ret;
+}
+
+
+//Сахаров Илья Владимирович 5307
+//Умножение целого на (-1)
+
+INTEGER MUL_ZZ(INTEGER taken)
+{
+	INTEGER ret;
+	ret.sign = ~taken.sign;
+
+	return ret;
+}
+
+
+//Добавление 1 к натуральному числу
+
+
+
+struct NATURAL ADD_1N_N(struct NATURAL original)
+{
+	struct NATURAL sum;
+	struct NATURAL q;
+	q.index = 1;
+	q.number = (int*)malloc(1 * sizeof(int));
+	*(q.number) = 1;
+	sum = ADD_NN_N(original, q);
+	return original;
+}
+
+//Частное от деления большего целого числа на меньшее
+//или равное натуральное с остатком (делитель отличен от нуля)
+
+INTEGER DIV_ZZ_Z(INTEGER a, INTEGER b)
+{
+	INTEGER ans;                            // Результат умножения
+	NATURAL PR;
+	NATURAL a_in_N;                         // Абсолютное значение a
+	NATURAL b_in_N;                         // Абсолютное значение b
+
+	a_in_N = ABS_Z_N(a);
+	b_in_N = ABS_Z_N(b);
+
+	PR = DIV_NN_N(a_in_N, b_in_N);
+
+	delete[] a_in_N.number;
+	delete[] b_in_N.number;
+
+	ans.natural_part.number = new int[PR.index];
+	ans.natural_part.number = PR.number;
+	ans.natural_part.index = PR.index;
+	ans.sign = (a.sign != b.sign);
+
+	return ans;
+}
+
+
+
+
+//Остаток от деления большего целого числа на меньшее
+//или равное натуральное с остатком (делитель отличен от нуля)
+
+INTEGER MOD_ZZ_Z(INTEGER a, INTEGER b)
+{
+	INTEGER q = DIV_ZZ_Z(a, b);           // Находим частное от деления
+	INTEGER bq = MUL_ZZ_Z(b, q);          // Находим произведение делителя на частное от деления
+	INTEGER r = SUB_ZZ_Z(a, bq);          // Остаток от деления (a = bq + r => r = a - bq)
+	return r;
+}
+
+//Умножение целых чисел
+
+INTEGER MUL_ZZ_Z(INTEGER a, INTEGER b)
+{
+	INTEGER ans;                            // Результат умножения
+	NATURAL PR;
+	NATURAL a_in_N;                         // Абсолютное значение a
+	NATURAL b_in_N;                         // Абсолютное значение b
+
+	a_in_N = ABS_Z_N(a);
+	b_in_N = ABS_Z_N(b);
+
+	PR = MUL_NN_N(a_in_N, b_in_N);
+
+	delete[] a_in_N.number;
+	delete[] b_in_N.number;
+
+	ans.natural_part.number = new int[PR.index];
+	ans.natural_part.number = PR.number;
+	ans.natural_part.index = PR.index;
+	ans.sign = (a.sign != b.sign);
+
+	return ans;
+}
+
+//Сахаров Илья Владимирович 5307
+//Вычитание целых чисел
+
+struct INTEGER SUB_ZZ_Z(INTEGER firstTerm, INTEGER secondTerm)
+{
+	INTEGER result;
+
+	result.natural_part.number = ADD_ZZ_Z(firstTerm, MUL_ZZ((secondTerm))).natural_part.number;
+	result.natural_part.index = ADD_ZZ_Z(firstTerm, MUL_ZZ(secondTerm)).natural_part.index;
+	result.sign = firstTerm.sign;
+
+	return result;
+}
+
+/*
+struct RATIONAL ADD_QQ_Q(struct RATIONAL x, struct RATIONAL y)
+{
+	struct RATIONAL add;
+	struct NATURAL nok, sub1, sub2;
+
+	nok = LCM_NN_N(x.denominator, y.denominator);  //находим общий знаменатель
+	sub1 = DIV_NN_N(nok, x.denominator);           //находим доп множитель первой дроби
+	sub2 = DIV_NN_N(nok, y.denominator);	       //находим доп множитель второй дроби
+
+	add.denominator = nok;
+	sub1 = MUL_NN_N(sub1, x.numerator);            //находим числители домноженные на доп множители
+	sub2 = MUL_NN_N(sub2, y.numerator);
+
+	add.numerator = ADD_NN_N(sub1, sub2);          //сумма новых числителей
+	add.sign = x.sign^y.sign;                      //знак исключающее или
+
+
+	return add;
+}*/
+
+int INT_Q_Z(struct RATIONAL a)
+{
+	if (a.denominator.number)
+		return (a.denominator.index == 1 && a.denominator.number[0] == 1) ? 1 : 0;
+	return 1;
+}
+
+//MUL_NN_N
+
+
+struct RATIONAL MUL_QQ_Q(struct RATIONAL x, struct RATIONAL y)
+{
+	struct RATIONAL mul;
+
+	mul.numerator = MUL_NN_N(x.numerator, y.numerator);
+	mul.denominator = MUL_NN_N(x.denominator, y.denominator);
+	mul.sign = x.sign^y.sign;
+	return mul;
+}
+
+/*
+Подгружаемы модули:
+ABS_Z_N
+GCF_NN_N
+DIV_ZZ_Z
+
+Структура:
+struct RATIONAL
+{
+NATURAL numerator; //числитель
+NATURAL denominator; //знаменатель
+short sign; //знак
+}
+
+*/
+/*
+struct RATIONAL RED_QQ_Q(struct RATIONAL a)
+{
+	struct RATIONAL b; //Возвращаемая дробь
+	struct NATURAL NOD = GCF_NN_N(a.numerator, a.denominator); //НОД числителя и знаменателя
+	b.numerator = DIV_ZZ_Z(a.numerator, NOD);
+	b.denominator = DIV_ZZ_Z(a.denominator, NOD);
+	b.sign = a.sign;
+	return b;
+}
+*/
+//Преобразование дробного в целое (если знаменатель равен 1)
+
+//Икренникова Диана 5307
+
+struct INTEGER TRANS_Z_Q(struct RATIONAL x)
+{
+	struct INTEGER y;
+	y.natural_part.number = (int*)malloc((x.numerator.index)*sizeof(int));
+	y.natural_part.index = x.numerator.index;
+	for (int i = 0; i < y.natural_part.index; i++) //скорее всего это и не нужно, но пусть пока будет
+		y.natural_part.number[i] = 0;
+	for (int i = 0; i < y.natural_part.index; i++)
+		y.natural_part.number[i] = x.numerator.number[i];
+
+	y.sign = x.sign;
+
+	return y;
+}
+
+struct RATIONAL TRANS_Z_Q(struct INTEGER x)
+{
+	struct RATIONAL y;
+	y.numerator.number = (int*)malloc((x.natural_part.index)*sizeof(int));
+	y.numerator.index = x.natural_part.index;
+	for (int i = 0; i < y.numerator.index; i++) //скорее всего это и не нужно, но пусть пока будет
+		y.numerator.number[i] = 0;
+	for (int i = 0; i < y.numerator.index; i++)
+		y.numerator.number[i] = x.natural_part.number[i];
+	y.denominator.index = 1;
+	y.denominator.number = (int*)malloc((y.denominator.index)*sizeof(int));
+	y.denominator.number[0] = 1;
+	y.sign = x.sign;
+
+	return y;
+}
+
